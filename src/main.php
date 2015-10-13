@@ -147,7 +147,7 @@
 					}
 					else
 					{
-						$output->Warn("\tisCritical has to be 'true' or 'false'!\n");
+						$output->Warn("On line " .getLine($argv[$x], "isCritical=" .$ini[$testname]['isCritical']) ." of file " .$argv[$x] .": isCritical has to be 'true' or 'false'.\n");
 					}
 				}
 
