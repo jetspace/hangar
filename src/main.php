@@ -5,9 +5,26 @@
 	Licensed under the terms of the MIT/X11 License
 
 */
-
-
 	include 'src/log.php';
+
+	function getLine($filename, $line)
+	{
+		$handle = fopen($filename, "r");
+		$c = 0;
+
+    while (($x = fgets($handle)))
+		{
+			$c++;
+			if($x == $line ."\n")
+				break;
+    }
+
+    fclose($handle);
+
+		return $c;
+	}
+
+
 
 	$version = 0.05;
 
@@ -56,7 +73,7 @@
 				}
 				else
 				{
-					$output->Warn("isCritical has to be 'true' or 'false'.\n");
+					$output->Warn("On line " .getLine($argv[$x], "isCritical=" .$ini['Settings']['isCritical']) ." of file " .$argv[$x] .": isCritical has to be 'true' or 'false'.\n");
 				}
 			}
 
@@ -68,7 +85,7 @@
 				}
 				else
 				{
-					$output->Warn("Return Value must be a positive number!");
+					$output->Warn("On line " .getLine($argv[$x], "success=" .$ini['Settings']['success']) ." of file " .$argv[$x] .": Return value must be a positive number.\n");
 				}
 			}
 
@@ -80,7 +97,7 @@
 				}
 				else
 				{
-					$output->Warn(":: [WARNING] Return Value must be a positive number!");
+					$output->Warn("On line " .getLine($argv[$x], "failure=" .$ini['Settings']['failure']) ." of file " .$argv[$x] .": Return value must be a positive number.\n");
 				}
 			}
 
