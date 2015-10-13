@@ -1,0 +1,22 @@
+config-version:1.0
+
+[Settings]
+isCritical=true
+success=0
+failure=1
+
+[Test1]
+name=Example
+exec=echo -n "Hello World"
+outp=Hello World
+
+[Test2]
+name=AnotherExample
+exec=echo test
+ret=0
+
+[Test3]
+name=FailureExample
+exec=false
+ret=0
+isCritical=false
