@@ -1,7 +1,7 @@
-config-version:1.0
+config-version:0.02
 
 [Settings]
-isCritical=true
+isCritical=false
 success=0
 failure=1
 
