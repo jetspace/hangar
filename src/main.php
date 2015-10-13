@@ -1,8 +1,18 @@
 <?php
+/*
 
-	$version = 0.03;
+	Copyright see Authors file
+	Licensed under the terms of the MIT/X11 License
 
-	print (":: Jetspace Hangar Version " . $version . " started!\n");
+*/
+
+
+	include 'src/log.php';
+
+	$version = 0.04;
+
+	$output = new Log();
+	$output->Log(("JetSpace Hangar Version " . $version . " started!\n"));
 
 	$isCritical = true;
 	$success = 0;
@@ -13,55 +23,71 @@
 		return 1;
 	}
 
-	$ini = parse_ini_file($argv[1], TRUE);
-	print(":: Configuration\n");
-	if(isset($ini['Settings']['isCritical']))
+	for($x = 1; $x < $argc; $x++)
 	{
-		if($ini['Settings']['isCritical'] == 1 || $ini['Settings']['isCritical'] == "")
+		//Parse Comandline args:
+		if($argv[$x] == "--quiet" || $argv[$x] == "-q")
 		{
-			$isCritical = $ini['Settings']['isCritical'];
-			if($isCritical == 1)
+			$output->toggleDebug(false);
+		}
+		else if($argv[$x] == "--debug" || $argv[$x] == "-d")
+		{
+			$output->toggleDebug(true);
+		}
+		else
+		{
+			$ini = parse_ini_file($argv[$x], TRUE);
+
+			$output->Debug("Configuration:\n");
+			if(isset($ini['Settings']['isCritical']))
 			{
-				$isCritical = true;
+				if($ini['Settings']['isCritical'] == 1 || $ini['Settings']['isCritical'] == "")
+				{
+					$isCritical = $ini['Settings']['isCritical'];
+					if($isCritical == 1)
+					{
+						$isCritical = true;
+					}
+					else
+					{
+						$isCritical = false;
+					}
+					$output->Debug("\tisCritical set to " . ($isCritical ? "true.\n" : "false.\n"));
+				}
+				else
+				{
+					$output->Warn("isCritical has to be 'true' or 'false'.\n");
+				}
 			}
-			else
+
+			if(isset($ini['Settings']['success']))
 			{
-				$isCritical = false;
+				if(is_numeric($ini['Settings']['success']) == TRUE)
+				{
+					$success = $ini['Settings']['success'];
+				}
+				else
+				{
+					$output->Warn("Return Value must be a positive number!");
+				}
 			}
-			echo $isCritical ? "\tisCritical set to true\n" : "\tisCritical set to false\n";
-		}
-		else
-		{
-			echo ":: [WARNING] isCritical has to be \"true\" or \"false\"\n";
+
+			if(isset($ini['Settings']['failure']))
+			{
+				if(is_numeric($ini['Settings']['failure']) == TRUE)
+				{
+					$failure = $ini['Settings']['failure'];
+				}
+				else
+				{
+					$output->Warn(":: [WARNING] Return Value must be a positive number!");
+				}
+			}
+
+			$output->Debug("Return Values:\n");
+			$output->Debug("\tSuccess: " . $success . "\n");
+			$output->Debug("\tFailure: " . $failure . "\n");
 		}
 	}
-
-	if(isset($ini['Settings']['success']))
-	{
-		if(is_numeric($ini['Settings']['success']) == TRUE)
-		{
-			$success = $ini['Settings']['success'];
-		}
-		else
-		{
-			$success = ":: [WARNING] Return Value must be a positive number!";
-		}
-	}
-
-	if(isset($ini['Settings']['failure']))
-	{
-		if(is_numeric($ini['Settings']['failure']) == TRUE)
-		{
-			$failure = $ini['Settings']['failure'];
-		}
-		else
-		{
-			$failure = ":: [WARNING] Return Value must be a positive number!";
-		}
-	}
-
-	print ":: Return Values:\n";
-	print "\tSuccess: " . $success . "\n";
-	print "\tFailure: " . $failure . "\n";
 
 ?>
