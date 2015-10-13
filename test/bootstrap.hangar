@@ -1,0 +1,21 @@
+config-epoch:0
+
+[Settings]
+isCritical=true
+success=0
+failure=1
+
+[Test1]
+name=TestReturnOfHangar
+exec="php src/main.php test/example.hangar"
+ret=0
+
+[Test2]
+name=TestOutputOfHangar
+exec="php src/main.php -q test/example.hangar"
+outp=":: JetSpace Hangar Version 0.05 started!:: Test Example passed!:: Test AnotherExample passed!:: Test FailureExample failed!:: Test NewExample passed!"
+
+[Test3]
+name=TestFalseResult
+exec="php src/main.php test/false.hangar"
+ret=1

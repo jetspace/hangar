@@ -1,0 +1,9 @@
+[Config]
+isCritical=true
+success=0
+failure=1
+
+[Test1]
+name=""
+exec="false"
+ret=a
