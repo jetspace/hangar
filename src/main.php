@@ -1,6 +1,6 @@
 <?php
 
-	$version = 0.02;
+	$version = 0.03;
 
 	print (":: Jetspace Hangar Version " . $version . " started!\n");
 
@@ -8,12 +8,16 @@
 	$success = 0;
 	$failure = 1;
 
-	$ini = parse_ini_file("test/example.hangar", TRUE);
+	if($argc < 2)
+	{
+		return 1;
+	}
 
+	$ini = parse_ini_file($argv[1], TRUE);
 	print(":: Configuration\n");
 	if(isset($ini['Settings']['isCritical']))
 	{
-		if($ini['Settings']['isCritical'] == "true" || $ini['Settings']['isCritical'] == "false")
+		if($ini['Settings']['isCritical'] == 1 || $ini['Settings']['isCritical'] == "")
 		{
 			$isCritical = $ini['Settings']['isCritical'];
 			if($isCritical == 1)
