@@ -1,22 +1,28 @@
 config-epoch:0
 
 [Settings]
-isCritical=false
+isCritical=true
 success=0
 failure=1
 
 [Test1]
 name=Example
-exec=echo -n "Hello World"
-outp=Hello World
+exec="echo Hello World"
+outp="Hello World"
 
 [Test2]
 name=AnotherExample
-exec=echo test
+exec="echo test"
 ret=0
 
 [Test3]
 name=FailureExample
-exec=false
+exec="false"
 ret=0
 isCritical=false
+
+[Test4]
+name=NewExample
+exec="echo This is not so easy"
+outp="This is not so easy"
+isCritical=true

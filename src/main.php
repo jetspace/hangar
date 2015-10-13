@@ -9,7 +9,7 @@
 
 	include 'src/log.php';
 
-	$version = 0.04;
+	$version = 0.05;
 
 	$output = new Log();
 	$output->Log(("JetSpace Hangar Version " . $version . " started!\n"));
@@ -87,6 +87,97 @@
 			$output->Debug("Return Values:\n");
 			$output->Debug("\tSuccess: " . $success . "\n");
 			$output->Debug("\tFailure: " . $failure . "\n");
+
+			//Perform Tests:
+			$testn = 1;
+			$testprefix = "Test";
+
+			while(isset($ini[$testprefix .strval($testn)]))
+			{
+				$testSuccess=true;
+				$testname=$testprefix .strval($testn);
+				$testcritical = $isCritical;
+				$name="";
+				$exec="";
+				$outp="";
+				$ret="";
+
+				if(isset($ini[$testname]['name']))
+					$name = $ini[$testname]['name'];
+				else
+					$output->Warn($testname ." has no name!");
+
+				if(isset($ini[$testname]['exec']))
+					$exec = $ini[$testname]['exec'];
+				else
+					$output->Warn($testname. "has no command to execute!");
+
+				if(isset($ini[$testname]['outp']))
+					$outp = $ini[$testname]['outp'];
+
+				if(isset($ini[$testname]['ret']))
+					$ret = $ini[$testname]['ret'];
+
+				if(isset($ini[$testname]['isCritical']))
+				{
+					if($ini[$testname]['isCritical'] == 1 || $ini[$testname]['isCritical'] == "")
+					{
+						$testcritical = $ini[$testname]['isCritical'];
+						if($testcritical == 1)
+							$testcritical = true;
+						else
+							$testcritical = false;
+					}
+					else
+					{
+						$output->Warn("\tisCritical has to be 'true' or 'false'!\n");
+					}
+				}
+
+
+				$out = Array();
+				$ereturn = 0;
+
+				exec($exec, $out, $ereturn);
+
+				$temp = implode("", $out);
+
+
+				if($outp != "")
+				{
+					if($temp != $outp)
+					{
+						$testSuccess = false;
+					}
+				}
+				if($ret != "")
+				{
+					if($ereturn != $ret)
+					{
+						$testSuccess = false;
+					}
+				}
+
+
+				if($testSuccess == true)
+				{
+					$output->Log("Test ". $name. " passed!\n");
+				}
+				else if($testSuccess == false)
+				{
+					$output->Log("Test ". $name ." failed!\n");
+					if($testcritical == true)
+					{
+						$output->Error("Critical Test failed! Stopped Programm!\n");
+					}
+				}
+
+				$testn++;
+
+			}
+
+
+
 		}
 	}
 
